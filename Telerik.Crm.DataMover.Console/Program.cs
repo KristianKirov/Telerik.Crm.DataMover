@@ -25,6 +25,8 @@ namespace Telerik.Crm.DataMover.Console
 		private static int lastReadStartId;
 		private static int lastReadEndId;
 
+		private static DisableTriggersRegion disableTriggersRegion;
+
 		static void Main(string[] args)
 		{
 			Task t = MainAsync(args);
@@ -48,14 +50,18 @@ namespace Telerik.Crm.DataMover.Console
 					return true;
 				}), true);
 
-				IActivityProvider activityProvider = new AdoNetActivityProvider(new ActivityDataConfig()
+				ActivityDataConfig dataConfig = new ActivityDataConfig()
 				{
 					ConnectionString = ConfigurationManager.AppSettings["Sql.ConnectionString"],
 					//GetActivitiesCountQuery = "SELECT COUNT (1) FROM [crm].[Activity]",
 					//GetPagedActivitiesByIdQuery = "SELECT TOP (@Take) * FROM [crm].[Activity] where ActivityId >= @StartActivityId and ActivityId <= @EndActivityId order by ActivityId",
 					GetActivitiesInRangeQuery = ConfigurationManager.AppSettings["Sql.GetActivitiesInRangeQuery"],
-					SetActivityShortDescriptionQuery = ConfigurationManager.AppSettings["Sql.SetActivityShortDescriptionQuery"]
-				});
+					SetActivityShortDescriptionQuery = ConfigurationManager.AppSettings["Sql.SetActivityShortDescriptionQuery"],
+					DisableTriggersQuery = ConfigurationManager.AppSettings["Sql.DisableTriggersQuery"],
+					EnableTriggersQuery = ConfigurationManager.AppSettings["Sql.EnableTriggersQuery"]
+				};
+
+				IActivityProvider activityProvider = new AdoNetActivityProvider(dataConfig);
 				//IParallelReadersFactory<int, Activity> activityReadersFactory = new SqlActivitiesParallelReadersFactory(activityProvider, 4, 1000);
 
 				SimpleSqlActivitiesReader activitiesReader = new SimpleSqlActivitiesReader(startActivityId, 1000, activityProvider);
@@ -68,7 +74,7 @@ namespace Telerik.Crm.DataMover.Console
 				System.Console.WriteLine("Job? (1 - Write to Rackspace, 2 - Generate short descriptions): ");
 				int writeCommand = int.Parse(System.Console.ReadLine());
 
-				BaseActivityWriter activityDataWriter = Program.GetWriter(writeCommand, activityProvider);
+				BaseActivityWriter activityDataWriter = Program.GetWriter(writeCommand, activityProvider, dataConfig);
 				activityDataWriter.ItemWritten += (s, e) =>
 				{
 					Program.lastWrittenItemId = e.Activity.Id;
@@ -123,7 +129,7 @@ namespace Telerik.Crm.DataMover.Console
 			}
 		}
 
-		private static BaseActivityWriter GetWriter(int command, IActivityProvider activityProvider)
+		private static BaseActivityWriter GetWriter(int command, IActivityProvider activityProvider, ActivityDataConfig dataConfig)
 		{
 			if (command == 1)
 			{
@@ -144,6 +150,9 @@ namespace Telerik.Crm.DataMover.Console
 
 			if (command == 2)
 			{
+				Program.disableTriggersRegion = new DisableTriggersRegion(dataConfig);
+				Program.disableTriggersRegion.Enter();
+
 				RelaxOptions relax = new RelaxOptions()
 				{
 					RelaxOnEach = 100,
@@ -163,6 +172,11 @@ namespace Telerik.Crm.DataMover.Console
 		private static void OnApplicationEnd()
 		{
 			Logger.Log(string.Format("Last activity id: {0} | Last read activities: [{1}, {2}]", Program.lastWrittenItemId, Program.lastReadStartId, Program.lastReadEndId));
+
+			if (Program.disableTriggersRegion != null)
+			{
+				Program.disableTriggersRegion.Exit();
+			}
 		}
 
 		[DllImport("Kernel32")]

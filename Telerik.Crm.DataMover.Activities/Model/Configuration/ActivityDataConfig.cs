@@ -17,5 +17,9 @@ namespace Telerik.Crm.DataMover.Activities.Model.Configuration
 		public string GetActivitiesInRangeQuery { get; set; }
 
 		public string SetActivityShortDescriptionQuery { get; set; }
+
+		public string DisableTriggersQuery { get; set; }
+
+		public string EnableTriggersQuery { get; set; }
 	}
 }

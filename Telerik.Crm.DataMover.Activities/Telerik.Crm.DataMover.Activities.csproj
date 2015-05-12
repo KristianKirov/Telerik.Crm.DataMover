@@ -32,7 +32,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Bytes2you.Validation">
+    <Reference Include="Bytes2you.Validation, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Bytes2you.Validation.1.0.0\lib\Bytes2you.Validation.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
@@ -72,6 +73,7 @@
     <Compile Include="Security\AesEncryptor.cs" />
     <Compile Include="Sql\ActivitiesShortDescriptionWriter.cs" />
     <Compile Include="Sql\AdoNetActivityProvider.cs" />
+    <Compile Include="Sql\DisableTriggersRegion.cs" />
     <Compile Include="Sql\SimpleSqlActivitiesReader.cs" />
     <Compile Include="Sql\SqlActivitiesParallelReadersFactory.cs" />
     <Compile Include="Sql\SqlActivitiesReader.cs" />

@@ -17,10 +17,6 @@ namespace Telerik.Crm.DataMover.Activities.Rackspace
 
 		private readonly Task completedTask;
 
-		public event EventHandler<ActivityWrittenEventArgs> ItemWritten;
-
-		public event EventHandler<ActivityWriteErrorEventArgs> ItemFailed;
-
 		public CloudFilesActivitiesWriter(ICloudFilesClient cloudFilesClient, IEncryptor encryptor)
 		{
 			this.cloudFilesClient = cloudFilesClient;

@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Telerik.Crm.DataMover", "Telerik.Crm.DataMover\Telerik.Crm.DataMover.csproj", "{52E15ACE-B2BC-4243-AC32-8C86AFD0DE8C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Telerik.Crm.DataMover.Console", "Telerik.Crm.DataMover.Console\Telerik.Crm.DataMover.Console.csproj", "{7F00D2D0-4501-47F3-A9BE-674F2B472BA4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Telerik.Crm.DataMover.Activities", "Telerik.Crm.DataMover.Activities\Telerik.Crm.DataMover.Activities.csproj", "{313D7591-5AFE-4D27-8560-FB6CFB999CDD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{52E15ACE-B2BC-4243-AC32-8C86AFD0DE8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52E15ACE-B2BC-4243-AC32-8C86AFD0DE8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52E15ACE-B2BC-4243-AC32-8C86AFD0DE8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52E15ACE-B2BC-4243-AC32-8C86AFD0DE8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F00D2D0-4501-47F3-A9BE-674F2B472BA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F00D2D0-4501-47F3-A9BE-674F2B472BA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F00D2D0-4501-47F3-A9BE-674F2B472BA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F00D2D0-4501-47F3-A9BE-674F2B472BA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{313D7591-5AFE-4D27-8560-FB6CFB999CDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{313D7591-5AFE-4D27-8560-FB6CFB999CDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{313D7591-5AFE-4D27-8560-FB6CFB999CDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{313D7591-5AFE-4D27-8560-FB6CFB999CDD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

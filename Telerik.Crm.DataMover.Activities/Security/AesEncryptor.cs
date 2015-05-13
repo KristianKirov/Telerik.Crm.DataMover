@@ -15,17 +15,15 @@ namespace Telerik.Crm.DataMover.Activities.Security
 
 		private readonly byte[] key;
 
-		private static Encoding encoding = Encoding.ASCII;
-
 		public AesEncryptor(byte[] initialisationVector, byte[] key)
 		{
 			this.initialisationVector = initialisationVector;
 			this.key = key;
 		}
 
-		public string Encrypt(string rawData)
+		public Stream Encrypt(string rawData)
 		{
-			string encryptedString;
+			Stream encryptedStream;
 
 			using (AesManaged aesAlgorithm = new AesManaged())
 			{
@@ -43,38 +41,11 @@ namespace Telerik.Crm.DataMover.Activities.Security
 						}
 					}
 
-					encryptedString = Convert.ToBase64String(memoryStream.ToArray());
+					encryptedStream = new MemoryStream(memoryStream.ToArray());
 				}
 			}
 
-			return encryptedString;
-		}
-
-		public string Decrypt(string encryptedData)
-		{
-			string rawData;
-
-			using (AesManaged aesAlgorithm = new AesManaged())
-			{
-				aesAlgorithm.IV = this.initialisationVector;
-				aesAlgorithm.Key = this.key;
-
-				ICryptoTransform decryptor = aesAlgorithm.CreateDecryptor(aesAlgorithm.Key, aesAlgorithm.IV);
-
-				byte[] encryptedBytes = Convert.FromBase64String(encryptedData);
-				using (MemoryStream memoryStream = new MemoryStream(encryptedBytes))
-				{
-					using (CryptoStream cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read))
-					{
-						using (StreamReader streamReader = new StreamReader(cryptoStream))
-						{
-							rawData = streamReader.ReadToEnd();
-						}
-					}
-				}
-			}
-
-			return rawData;
+			return encryptedStream;
 		}
 	}
 }

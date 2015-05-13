@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,8 +34,8 @@ namespace Telerik.Crm.DataMover.Activities.Rackspace
 				{
 					try
 					{
-						string fileContent = this.encryptor.Encrypt(a.Description);
-						cloudFilesClient.UpsertDocument(a.Id.ToString(), fileContent);
+						Stream fileStream = this.encryptor.Encrypt(a.Description);
+						cloudFilesClient.UpsertDocument(a.Id.ToString(), fileStream, "text/plain");
 
 						this.OnItemWritten(a);
 					}

@@ -63,8 +63,8 @@ namespace Telerik.Crm.DataMover.Console
 
 				IActivityProvider activityProvider = new AdoNetActivityProvider(dataConfig);
 				//IParallelReadersFactory<int, Activity> activityReadersFactory = new SqlActivitiesParallelReadersFactory(activityProvider, 4, 1000);
-
-				SimpleSqlActivitiesReader activitiesReader = new SimpleSqlActivitiesReader(startActivityId, 1000, activityProvider);
+				int readPageSize = int.Parse(ConfigurationManager.AppSettings["Sql.ReadPageSize"]);
+				SimpleSqlActivitiesReader activitiesReader = new SimpleSqlActivitiesReader(startActivityId, readPageSize, activityProvider);
 				activitiesReader.PageRead += (s, e) =>
 				{
 					Program.lastReadStartId = e.From;

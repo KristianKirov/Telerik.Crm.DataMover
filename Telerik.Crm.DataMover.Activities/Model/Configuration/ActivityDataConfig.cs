@@ -21,5 +21,7 @@ namespace Telerik.Crm.DataMover.Activities.Model.Configuration
 		public string DisableTriggersQuery { get; set; }
 
 		public string EnableTriggersQuery { get; set; }
+
+		public string GetMaxActivityIdQuery { get; set; }
 	}
 }

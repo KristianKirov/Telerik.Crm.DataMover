@@ -20,10 +20,10 @@ namespace Telerik.Crm.DataMover.Activities.Text
 		{
 			if (text.Length <= this.maxSummarylength)
 			{
-				return text;
+				return text.Trim();
 			}
 
-			return text.Substring(0, maxSummarylength);
+			return text.Substring(0, maxSummarylength).Trim();
 		}
 	}
 }

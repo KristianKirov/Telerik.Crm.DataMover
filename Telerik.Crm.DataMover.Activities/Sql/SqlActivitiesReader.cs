@@ -35,12 +35,21 @@ namespace Telerik.Crm.DataMover.Activities.Sql
 
 			if (readActivities.Length == 0)
 			{
+				this.startKey = this.endKeyInclusive + 1;
+
 				return readActivities;
 			}
 
 			this.startKey = readActivities[readActivities.Length - 1].Id + 1;
 
 			return readActivities;
+		}
+
+		public Task<bool> HasMorePages()
+		{
+			bool result = this.startKey <= this.endKeyInclusive;
+
+			return Task.FromResult(result);
 		}
 	}
 }

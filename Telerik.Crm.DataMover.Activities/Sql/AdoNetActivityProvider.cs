@@ -57,6 +57,23 @@ namespace Telerik.Crm.DataMover.Activities.Sql.Data
 			return itemsCount;
 		}
 
+		public async Task<int> GetMaxActivityId()
+		{
+			int maxActivityId = 0;
+			using (SqlConnection sqlConnection = new SqlConnection(config.ConnectionString))
+			{
+				await sqlConnection.OpenAsync();
+				using (SqlCommand getMaxActivityIdCommand = sqlConnection.CreateCommand())
+				{
+					getMaxActivityIdCommand.CommandText = config.GetMaxActivityIdQuery;
+
+					maxActivityId = (int)(await getMaxActivityIdCommand.ExecuteScalarAsync());
+				}
+			}
+
+			return maxActivityId;
+		}
+
 		public async Task<Activity[]> GetInRange(int fromInclusive, int toInclusive)
 		{
 			Activity[] allActivities;

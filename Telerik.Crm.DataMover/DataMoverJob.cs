@@ -21,14 +21,24 @@ namespace Telerik.Crm.DataMover
 
 		public async Task StartMove()
 		{
-			TData[] itemsToWrite = await this.dataReader.ReadNextPage();
+			TData[] itemsToWrite = await this.dataReader.ReadNextPage().ConfigureAwait(false);
 			Guard.WhenArgument(itemsToWrite, "itemsToWrite").IsNull().Throw();
 
-			while (itemsToWrite.Length > 0)
+			while (true)
 			{
-				Task<TData[]> nextPageTask = this.dataReader.ReadNextPage();
+				bool hasMorePages = await this.dataReader.HasMorePages().ConfigureAwait(false);
+				Task<TData[]> nextPageTask = null;
+				if (hasMorePages)
+				{
+					nextPageTask = this.dataReader.ReadNextPage();
+				}
 
 				await this.dataWriter.WriteItems(itemsToWrite).ConfigureAwait(false);
+
+				if (nextPageTask == null)
+				{
+					break;
+				}
 
 				itemsToWrite = await nextPageTask.ConfigureAwait(false);
 			}

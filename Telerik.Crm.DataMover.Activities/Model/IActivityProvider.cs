@@ -15,5 +15,7 @@ namespace Telerik.Crm.DataMover.Activities.Model
 		Task<Activity[]> GetInRange(int fromInclusive, int toInclusive);
 
 		Task SetShortDescription(int activityId, string shortDescription);
+
+		Task<int> GetMaxActivityId();
 	}
 }

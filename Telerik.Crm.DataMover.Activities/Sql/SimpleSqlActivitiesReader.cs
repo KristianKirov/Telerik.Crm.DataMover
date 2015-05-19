@@ -12,17 +12,22 @@ namespace Telerik.Crm.DataMover.Activities.Sql
 	{
 		private int pageStartId;
 
+		private Activity[] lastReadItems;
+
 		private readonly int pageSize;
 
 		private readonly IActivityProvider activityProvider;
 
+		private readonly int doNotStopBeforeId;
+
 		public event EventHandler<ActivitiesPageReadEventArgs> PageRead;
 
-		public SimpleSqlActivitiesReader(int startId, int pageSize, IActivityProvider activityProvider)
+		public SimpleSqlActivitiesReader(int startId, int pageSize, IActivityProvider activityProvider, int doNotStopBeforeId)
 		{
 			this.pageStartId = startId;
 			this.pageSize = pageSize;
 			this.activityProvider = activityProvider;
+			this.doNotStopBeforeId = doNotStopBeforeId;
 		}
 
 		public async Task<Activity[]> ReadNextPage()
@@ -38,7 +43,24 @@ namespace Telerik.Crm.DataMover.Activities.Sql
 
 			this.pageStartId = nextPageStartId;
 
+			this.lastReadItems = activitiesInRange;
+
 			return activitiesInRange;
+		}
+
+		public Task<bool> HasMorePages()
+		{
+			bool result;
+			if (this.pageStartId <= this.doNotStopBeforeId)
+			{
+				result = true;
+			}
+			else
+			{
+				result = this.lastReadItems == null ? true : this.lastReadItems.Length > 0;
+			}
+
+			return Task.FromResult(result);
 		}
 	}
 }

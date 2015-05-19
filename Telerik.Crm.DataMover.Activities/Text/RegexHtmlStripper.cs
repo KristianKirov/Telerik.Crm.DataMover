@@ -18,9 +18,11 @@ namespace Telerik.Crm.DataMover.Activities.Text
 
 		private readonly Regex removeSinglelineScriptsRegex = new Regex("<script.+?/>", RegexOptions.Singleline | RegexOptions.Compiled);
 
-		private readonly Regex removeTagsRegex = new Regex("<.+?>|&nbsp;", RegexOptions.Singleline | RegexOptions.Compiled);
+		private readonly Regex removeTagsRegex = new Regex("<.+?>", RegexOptions.Singleline | RegexOptions.Compiled);
 
-		private readonly Regex removeWhitespacesRegex = new Regex("\\s{2,}|\\n|\\r", RegexOptions.Compiled);
+		private readonly Regex removeWhitespacesRegex = new Regex("\\n|\\r|&nbsp;", RegexOptions.Compiled);
+
+		private readonly Regex removeMultipleWhitespacesRegex = new Regex("\\s{2,}", RegexOptions.Compiled);
 
 		public string Strip(string html)
 		{
@@ -30,8 +32,9 @@ namespace Telerik.Crm.DataMover.Activities.Text
 			strippedHtml = this.removeSinglelineScriptsRegex.Replace(strippedHtml, string.Empty);
 			strippedHtml = this.removeTagsRegex.Replace(strippedHtml, string.Empty);
 			strippedHtml = this.removeWhitespacesRegex.Replace(strippedHtml, " ");
+			strippedHtml = this.removeMultipleWhitespacesRegex.Replace(strippedHtml, " ");
 
-			return strippedHtml;
+			return strippedHtml.Trim();
 		}
 	}
 }

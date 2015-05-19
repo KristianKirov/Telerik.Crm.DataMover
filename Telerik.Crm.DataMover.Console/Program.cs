@@ -58,13 +58,15 @@ namespace Telerik.Crm.DataMover.Console
 					GetActivitiesInRangeQuery = ConfigurationManager.AppSettings["Sql.GetActivitiesInRangeQuery"],
 					SetActivityShortDescriptionQuery = ConfigurationManager.AppSettings["Sql.SetActivityShortDescriptionQuery"],
 					DisableTriggersQuery = ConfigurationManager.AppSettings["Sql.DisableTriggersQuery"],
-					EnableTriggersQuery = ConfigurationManager.AppSettings["Sql.EnableTriggersQuery"]
+					EnableTriggersQuery = ConfigurationManager.AppSettings["Sql.EnableTriggersQuery"],
+					GetMaxActivityIdQuery = ConfigurationManager.AppSettings["Sql.GetMaxActivityIdQuery"]
 				};
 
 				IActivityProvider activityProvider = new AdoNetActivityProvider(dataConfig);
 				//IParallelReadersFactory<int, Activity> activityReadersFactory = new SqlActivitiesParallelReadersFactory(activityProvider, 4, 1000);
 				int readPageSize = int.Parse(ConfigurationManager.AppSettings["Sql.ReadPageSize"]);
-				SimpleSqlActivitiesReader activitiesReader = new SimpleSqlActivitiesReader(startActivityId, readPageSize, activityProvider);
+				int maxActivityId = await activityProvider.GetMaxActivityId();
+				SimpleSqlActivitiesReader activitiesReader = new SimpleSqlActivitiesReader(startActivityId, readPageSize, activityProvider, maxActivityId);
 				activitiesReader.PageRead += (s, e) =>
 				{
 					Program.lastReadStartId = e.From;
@@ -73,6 +75,8 @@ namespace Telerik.Crm.DataMover.Console
 
 				System.Console.WriteLine("Job? (1 - Write to Rackspace, 2 - Generate short descriptions): ");
 				int writeCommand = int.Parse(System.Console.ReadLine());
+
+				Logger.Log(string.Format("Starting - ActivityId: {0}, Job: {1}", startActivityId, writeCommand));
 
 				BaseActivityWriter activityDataWriter = Program.GetWriter(writeCommand, activityProvider, dataConfig);
 				activityDataWriter.ItemWritten += (s, e) =>
@@ -112,14 +116,14 @@ namespace Telerik.Crm.DataMover.Console
 			{
 				ae.Handle(e =>
 				{
-					Logger.Log(e.ToString());
+					Logger.Error(e.ToString());
 
 					return true;
 				});
 			}
 			catch (Exception ex)
 			{
-				Logger.Log(ex.ToString());
+				Logger.Error(ex.ToString());
 			}
 			finally
 			{

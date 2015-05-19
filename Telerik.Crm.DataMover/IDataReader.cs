@@ -9,5 +9,7 @@ namespace Telerik.Crm.DataMover
 	public interface IDataReader<TKey, TData>
 	{
 		Task<TData[]> ReadNextPage();
+
+		Task<bool> HasMorePages();
 	}
 }
